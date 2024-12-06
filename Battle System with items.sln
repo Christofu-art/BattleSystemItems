@@ -1,31 +1,101 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.35325.158
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Battle System with items", "Battle System with items\Battle System with items.vcxproj", "{10A865F2-1C26-4CF6-80F2-5118034D282E}"
-EndProject
-Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Debug|x64.ActiveCfg = Debug|x64
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Debug|x64.Build.0 = Debug|x64
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Debug|x86.ActiveCfg = Debug|Win32
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Debug|x86.Build.0 = Debug|Win32
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Release|x64.ActiveCfg = Release|x64
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Release|x64.Build.0 = Release|x64
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Release|x86.ActiveCfg = Release|Win32
-		{10A865F2-1C26-4CF6-80F2-5118034D282E}.Release|x86.Build.0 = Release|Win32
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E0F83BBE-5CC9-4121-882C-F4D5DA8B199E}
-	EndGlobalSection
-EndGlobal
+#include<iostream>
+using namespace std;
+
+//global variables
+string items[5];
+int playerhealth = 100;
+
+//function declaration
+void BattleSys();
+
+int main() {
+	srand(time(NULL)); //seed your rand
+	int room = 1;
+	string input;
+	while (true) {
+
+		//stuff here happens every turn
+		cout << "your inventory: ";
+		for (int i = 0; i < 5; i++)
+			cout << items[i] << " "; //printing items
+		cout << endl << endl;
+
+		switch(room) {
+		case 1:
+			cout << "room 1, you can go south" << endl;
+			if (items[0] != "sword") {
+				items[0] = "sword";
+				cout << "you got a sword!" << endl;
+			}
+			cin >> input;
+			BattleSys();
+			break;
+		}
+
+	}
+}
+
+//function definitions
+void BattleSys() {
+	int monsterhealth = 20;
+	int input;
+	int num;
+	cout << endl << endl << "-----------------Battle Begins-----------------" << endl;
+	while (playerhealth > 0 && monsterhealth > 0) {
+		
+		//monster attack
+		if (items[1] == "armor") {
+			num = rand() % 7 + 3; 
+			cout << "your armor absorbs the blow and get hit for" << num << "damage!" << endl;
+			playerhealth -= num;
+		}
+		else {
+			num = rand() % 15 + 12; 
+			cout << "the monster bites your bare arm for " << num << " dmg" << endl;
+			playerhealth -= num;
+		}
+		//gets player's choice:
+		cout << "press 1 to attack, 2 to drink health potion, 3 to try escape!" << endl;
+		cin >> input;
+
+		switch (input) {
+		case 1:
+			//player attack
+			if (items[0] == "sword") {
+				num = rand() % 10 + 10; //range from 10-20
+				cout << "you slash the monster with your sword for" << num << "damage!" << endl;
+				monsterhealth -= num;
+			}
+			else {
+				num = rand() % 5 + 2; //range from 2-7
+				cout << "you attack for " <<num<< " dmg" << endl;
+				monsterhealth -= num;
+			}
+			break;
+		case 2: //health
+			if (items[3] == "potion") {
+				cout << "jug jug!" << endl;
+				playerhealth += 50;
+				items[3] = " "; //erase the potion
+			}
+			else cout << "sorry you don't have any potions" << endl;
+
+			break;
+		case 3://escape
+			num = rand() % 100;
+			if (num > 75) {//25% chance of escaping
+				cout << "you successfully run away!" << endl;
+				monsterhealth = 0;
+
+			}
+			else cout << "you are connered and can't escape!" << endl;
+			break;
+		default:
+			cout << "srry not an option" << endl;
+		}
+
+		cout << "your health:" << playerhealth << endl;
+		cout << "monster's health:" << monsterhealth << endl;
+	}
+	cout << "end of battle--------------------------------------" << endl;
+}
